@@ -1,0 +1,32 @@
+# Maintainer: Jack Page <jdpboc98@gmail.com>
+
+pkgname=pylux-git
+pkgver=0.1.1
+pkgrel=1
+pkgdesc='Lighting documentation editor'
+arch=(any)
+url='http://os.pwrg.uk/software/pylux'
+license=('Apache')
+depends=('python' 'python-libxpx')
+makedepends=('git')
+provides=('pylux')
+conflicts=('pylux')
+source=('git://github.com/jackdpage/pylux.git')
+md5sums=('SKIP')
+
+pkgver() {
+    cd ${srcdir}/pylux
+    git describe --long --tags | sed -r 's/^v//;s/-.*//'
+}
+
+build() {
+    cd ${srcdir}/pylux
+    python setup.py build
+}
+
+package() {
+    cd ${srcdir}/pylux
+    python setup.py install --root=${pkgdir} --optimize=1
+
+    install -D -m644 LICENSE '${pkgdir}/usr/share/licenses/pylux/LICENSE'
+}

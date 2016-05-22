@@ -1,0 +1,14 @@
+pkgname=menlo-powerline-font
+pkgver=1.0
+pkgrel=1
+pkgdesc="Menlo font patched for powerline"
+arch=(any)
+depends=(fontconfig xorg-font-utils)
+source=("https://gist.github.com/qrush/1595572/raw/6c453ddc959b93895ffbf4fd904e2ba60256c904/Menlo-Powerline.otf")
+sha256sums=("92882c07a6219cd5345beffbab278af69d367a323705f4015f8561a860a31791")
+install=$pkgname.install
+
+package() {
+    install -d "$pkgdir/usr/share/fonts/misc"
+    install -m644 "$srcdir/Menlo-Powerline.otf" "$pkgdir/usr/share/fonts/misc/"
+}
