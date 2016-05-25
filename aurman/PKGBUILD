@@ -1,11 +1,11 @@
 pkgname=aurman
-pkgver=1.0.1
+pkgver=1.0.3
 pkgrel=1
 pkgdesc="Barebones AUR upgrader"
 arch=(any)
 depends=(git)
-source=("https://gist.githubusercontent.com/jackdpage/bbb6d00f01c85f313678f03bf239cb62/raw/e306b967b0abc6961826b28ecc4c426a6e9724c3/aurman")
-md5sums=("30066ad9aa0c0b815bf80ad1b6f9f020")
+source=("aurman")
+md5sums=("b63c825951bd03485e8f093e1b66ed9c")
 package() {
     install -D -m755 "$srcdir/aurman" "$pkgdir/usr/bin/aurman"
 }

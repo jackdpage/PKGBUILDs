@@ -1,0 +1,103 @@
+#!/bin/bash
+
+ACTION=$1
+ACTARG=$2
+cd $(printenv AURDIR)
+
+if [ "$ACTION" = '-h' ]
+then
+    echo 'aurman barebones AUR package manager'
+    echo ''
+    echo 'Usage'
+    echo 'aurman -h          display this message then exit'
+    echo 'aurman -S pkg      install new package pkg'
+    echo 'aurman -Rns pkg    remove existing package pkg'
+    echo 'aurman -Syu        upgrade all existing packages'
+# Install a new package. Assumes the given package exists in the AUR. Will 
+# not upgrade any existing packages. Full system upgrades only, like pacman.
+elif [ "$ACTION" = '-S' ]
+then
+    if [ -d "$ACTARG" ]
+    then
+        echo "$ACTARG" is already installed. Run aurman with -Syu to upgrade.
+    else
+        git clone https://aur.archlinux.org/"$ACTARG".git
+        if [ -e "$ACTARG"/PKGBUILD ]
+        then
+            cd "$ACTARG"
+            echo Would you like to review the PKGBUILD [Y/n] 
+            read review
+            if [ "$review" != n ]
+            then
+                "$EDITOR" PKGBUILD
+            fi
+            echo Continue installation? [Y/n]
+            read fullsteamahead
+            if [ "$fullsteamahead" != n ]
+            then
+                makepkg -sri
+            fi
+        else
+            echo Package does not exist. Deleting empty repository.
+            rm -r "$ACTARG"
+        fi
+    fi
+# Remove an existing package and its dependencies using pacman, then 
+# remove the git repository from the AURDIR.
+elif [ "$ACTION" = '-Rns' ]
+then
+    sudo pacman -Rns "$ACTARG"
+    if [ -d "$ACTARG" ] 
+    then
+        yes | rm -r "$ACTARG"
+    fi
+# Upgrade all system packages with pacman, then pull all AUR repositories 
+# and upgrade any AUR packages one by one.
+elif [ "$ACTION" = '-Syu' ]
+then
+    sudo pacman -Syu
+    for dir in *
+    do
+        if [ -d "$dir" ]
+        then
+            cd $dir
+            echo Updating PKGBUILD for "$dir"
+            git pull
+            ver=$(grep 'pkgver=' PKGBUILD|sed 's/pkgver=//'|tr -d '\n')
+            rel=$(grep 'pkgrel=' PKGBUILD|sed 's/pkgrel=//'|tr -d '\n')
+            current=$(echo "$ver"-"$rel")
+            yourver=$(pacman -Q "$dir"|sed "s/"$dir" //")
+            echo Most recent version is "$current"
+            echo You have version "$yourver"
+            if [ "$current" != "$yourver" ]
+            then
+                echo Would you like to upgrade "$dir"? [Y/n] 
+                read upgrading
+                if [ "$upgrading" = n ]
+                then
+                    echo Not upgrading "$dir"
+                else
+                    echo Would you like to review the PKGBUILD? [Y/n] 
+                    read review
+                    if [ "$review" != n ]
+                    then
+                        "$EDITOR" PKGBUILD
+                    fi
+                    echo Continue upgrading? [Y/n] 
+                    read fullsteamahead
+                    if [ "$fullsteamahead" != n ]
+                    then
+                        makepkg -sri
+                    fi
+                fi
+            else
+                echo "Nothing to upgrade"
+            fi
+            echo ""
+            cd ..
+        fi
+    done
+else
+    echo Not a valid action. Run aurman -h for usage.
+fi
+echo "Finished"
