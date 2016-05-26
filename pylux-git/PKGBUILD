@@ -1,12 +1,12 @@
 # Maintainer: Jack Page <jdpboc98@gmail.com>
 
 pkgname=pylux-git
-pkgver=0.1.1
+pkgver=0.3.1
 pkgrel=1
 pkgdesc='Lighting documentation editor'
 arch=(any)
 url='http://os.pwrg.uk/software/pylux'
-license=('Apache')
+license=('GPL3')
 depends=('python' 'python-libxpx')
 makedepends=('git')
 provides=('pylux')
@@ -16,7 +16,7 @@ md5sums=('SKIP')
 
 pkgver() {
     cd ${srcdir}/pylux
-    git describe --long --tags | sed -r 's/^v//;s/-.*//'
+    grep "version=" 'setup.py' | sed "s/[ ]*version='\([0-9]*\.[0-9]*\.[0-9]*\)',/\1/"
 }
 
 build() {
@@ -27,6 +27,4 @@ build() {
 package() {
     cd ${srcdir}/pylux
     python setup.py install --root=${pkgdir} --optimize=1
-
-    install -D -m644 LICENSE '${pkgdir}/usr/share/licenses/pylux/LICENSE'
 }
