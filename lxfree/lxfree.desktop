@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=LXFree for Java
+Comment=Freeing lighting designers for more important stuff!
+Exec=lxfree
+Icon=/usr/share/pixmaps/LXicon.png
+MimeType=application/lxxplot;
+Actions=;
