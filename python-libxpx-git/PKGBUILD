@@ -11,21 +11,21 @@ depends=('python')
 makedepends=('git')
 provides=('python-libxpx')
 conflicts=('python-libxpx')
-source=('git://github.com/jackdpage/libxpxpy.git')
+source=('git://github.com/jackdpage/python-libxpx.git')
 md5sums=('SKIP')
 
 pkgver() {
-    cd ${srcdir}/libxpxpy
+    cd ${srcdir}/python-libxpx
     git describe --long --tags | sed -r 's/^v//;s/-.*//'
 }
 
 build() {
-    cd ${srcdir}/libxpxpy
+    cd ${srcdir}/python-libxpx
     python setup.py build
 }
 
 package() {
-    cd ${srcdir}/libxpxpy
+    cd ${srcdir}/python-libxpx
     python setup.py install --root=${pkgdir} --optimize=1
 
     install -D -m644 LICENSE '${pkgdir}/usr/share/licenses/python-libxpx/LICENSE'
