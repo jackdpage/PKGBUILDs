@@ -1,0 +1,27 @@
+# Maintainer: Jack Page <jdpboc98@gmail.com>
+
+pkgname=pylux-content-git
+pkgver=0.1.1
+pkgrel=1
+pkgdesc='Base content pack for Pylux'
+arch=(any)
+url='http://os.pwrg.uk/software/pylux-content'
+license=('Apache')
+#depends=('pylux')
+makedepends=('git')
+provides=('pylux-content')
+conflicts=('pylux-content')
+source=('git://github.com/jackdpage/pylux-content.git')
+md5sums=('SKIP')
+
+pkgver() {
+    cd ${srcdir}/pylux-content
+    git describe --long --tags | sed -r 's/^v//;s/-.*//'
+}
+
+
+package() {
+    cd ${srcdir}/pylux-content
+    install -D -m644 fixture/* -t "${pkgdir}"/usr/share/pylux/fixture
+    install -D -m644 template/* -t "${pkgdir}"/usr/share/pylux/template
+}

@@ -1,11 +1,16 @@
 pkgname=lxfree
-pkgver=latest
+pkgver=1.6.4
 pkgrel=1
 pkgdesc="Application for drawing light plots and generating paperwork."
 arch=(any)
 depends=('java-runtime')
 source=('https://www.claudeheintzdesign.com/downloads/lxfreejava_linux_install.zip' 'lxfree.desktop' 'lxfree')
 md5sums=("bd4e77e39c34e89d21ba413c670acb06" "2aa5c1237714514956e3225cdc01da26" "2a4217fb55e27b1917889d9971640f44")
+
+pkgver() {
+    curl https://www.claudeheintzdesign.com/lx/lxfreejava_about.html | grep 'The latest version of' | sed 's/.*">v\(.*\) (.*/\1/'
+}
+
 package() {
     install -D -m644 "${srcdir}"/lxfree.desktop "${pkgdir}"/usr/share/applications/lxfree.desktop
     install -D -m644 "${srcdir}"/LXFreeForJava_Linux/LXFreeForJava.jar "${pkgdir}"/usr/share/lxfree/LXFreeForJava.jar
