@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Vim
+Comment=Command line text editor
+Exec=vim
+Icon=vim
+Terminal=true
+Type=Application
+Categories=Utility;

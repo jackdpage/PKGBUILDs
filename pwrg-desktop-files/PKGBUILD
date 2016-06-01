@@ -1,0 +1,13 @@
+pkgname=pwrg-desktop-files
+pkgver=1.0
+pkgrel=3
+pkgdesc="Miscellaneous desktop files for CLI programs"
+arch=(any)
+depends=("vim")
+source=("vim.desktop" "vim.png")
+md5sums=("b141ed84637d40de5116869e926404da" "bed00fc374c0cf76d89966ff2405d5fc")
+package() {
+    # Vim
+    install -D -m644 "${srcdir}"/vim.desktop "${pkgdir}"/usr/share/applications/vim.desktop
+    install -D -m644 "${srcdir}"/vim.png "${pkgdir}"/usr/share/pixmaps/vim.png
+}
